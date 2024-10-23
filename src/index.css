@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.rolling-container {
+    overflow-x: scroll; 
+    animation: rolling 5s linear infinite;
+}
+  @keyframes rolling {
+    from { transform: translateY(calc(-0vw + 0%)); }
+    to { transform: translateY(calc(-100vw + 100%)); } /* Adjust offset as needed */
+}

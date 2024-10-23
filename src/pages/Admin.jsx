@@ -3,8 +3,8 @@ import MenuBar from "../components/common/MenuBar"
 
 const AdminPage = ()=>{
     return(
-        <div className="relative w-full h-[100%] flex justify-center items-center ">
-            <div className="absolute end-10  w-[5%] rounded-xl overflow-hidden  h-[80%] ">
+        <div className=" w-full h-[100%] flex justify-center items-center ">
+            <div className="    w-[5%] rounded-xl overflow-hidden  h-[80%] ">
                 <MenuBar/>
             </div>
             <div className="w-full h-[100%]  ">

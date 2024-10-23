@@ -11,7 +11,7 @@ const MenuBar = () => {
         navigate(menuName)
     }
     return (
-        <div className="w-full h-[80%] flex flex-col justify-center items-center rounded-md">
+        <div className="w-full h-[80%] flex flex-col justify-start items-start  rounded-md">
             {Object.keys(menuList)?.length
                 ? Object.keys(menuList)?.map((menu) => {
                       const IconComponent = getMyIconFor(menu); // Get the icon component dynamically

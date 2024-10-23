@@ -1,4 +1,6 @@
 
 export const userApi = {
-    login:'/user/login'
+    login:'/user/login',
+    create:'/user/createUser',
+    getActiveClients:'/user/getActiveClients'
 }

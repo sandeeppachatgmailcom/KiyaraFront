@@ -6,6 +6,7 @@ import Header from './components/common/Header'
 import Footer from './components/common/Footer'
 import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
   const user = useSelector((state)=>state.user.user)
@@ -13,6 +14,7 @@ function App() {
     
    <div className='w-full relative h-screen '>
       {/* header  */}
+      <ToastContainer />
       {Object.keys(user).length ? <div className=' absolute  rounded-xl p-1 md:p-0 md:rounded-none overflow-hidden bottom-0 justify-center lg:relative h-[10%] w-full '>
           <Header/>
       </div>
