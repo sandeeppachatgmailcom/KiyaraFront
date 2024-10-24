@@ -9,6 +9,8 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaRegStopCircle } from "react-icons/fa";
 import { FaRegCirclePlay } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
+import { FaPowerOff } from "react-icons/fa";
+import { IoHome } from "react-icons/io5";
 const iconArray = {
     dashBoard:MdDashboard,
     clients:FaBuildingColumns,
@@ -20,7 +22,9 @@ const iconArray = {
     delete:RiDeleteBin5Line,
     block: FaRegStopCircle,
     resume:FaRegCirclePlay,
-    view:FaEye
+    view:FaEye,
+    logOut:FaPowerOff,
+    home:IoHome
 }
 
 const useDynamicIcons = ()=>{

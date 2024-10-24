@@ -10,7 +10,7 @@ const UserComponent = () => {
     const [users,setUsers] = useState()
     const fetchClients = async () => {
         try {
-            const result = await nodeServer.get(userApi.getActiveClients)
+            const result = await nodeServer.get(userApi.getActiveUsers)
             console.log(result.data.data)
             if (result.data) {
                 setUsers(result.data.data)
@@ -41,8 +41,9 @@ const UserComponent = () => {
                 </div>
                 <div className="w-full h-auto bg--300">
                 {users?.map((user)=>{
+                    console.log(user,user.userId,'111111111111111111111111')
                     return (
-                        <div className="w-full hover:bg-sky-600 hover:bg-opacity-15 cursor-pointer h-10 border-b  text-sky-800  border-blue-300 ">
+                        <div key={user.userId} className="w-full hover:bg-sky-600 hover:bg-opacity-15 cursor-pointer h-10 border-b  text-sky-800  border-blue-300 ">
                             <SingleUser bgcolour={"bg-sky-800 text-white "} user={user}  />
                         </div>
                         )

@@ -3,19 +3,27 @@ import { MdAlternateEmail } from "react-icons/md";
 import { FaUserEdit } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import useLogin from "../../hooks/useLogin";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useNavigation from "../../hooks/useNavigation";
+import { useDispatch, useSelector } from "react-redux";
+import { userlogin } from "../../store/userSlice";
 
 const LoginBox = () => {
     const login = useLogin()
     const navigate = useNavigation()
+    const dispatch = useDispatch()
+    const activeUser = useSelector((state)=>state.user.user)
     const [user,setUser] = useState({
         firstname:'',
         email:'',
         password:''
     })
+    useEffect(()=>{
+        console.log(activeUser)
+        if (Object.keys(activeUser)?.length ) navigate('adminHome')
+    },[activeUser])
     const handleChange = (event)=>{
         const {name,value} = event.target
         const temp = {
@@ -28,11 +36,15 @@ const LoginBox = () => {
     const saveData =async ()=>{
         const result = await login(user)
         if(result?.status){
-            toast.success(result?.message );
+            console.log(result)
+           // toast.success(result?.message );
+            dispatch(userlogin(result))
+            
+
         }
         else{
             toast.error(result?.message)
-            navigate('adminHome')
+            
 
         }
     } 

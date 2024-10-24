@@ -19,6 +19,7 @@
     "react-router-dom": "^6.27.0",
     "react-toastify": "^10.0.6",
     "redux": "^5.0.1",
+    "socket.io-client": "^4.8.0",
     "toaster": "^0.1.2"
   },
   "devDependencies": {

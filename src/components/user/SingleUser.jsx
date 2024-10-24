@@ -60,10 +60,10 @@ const SingleUser = ({ bgcolour, user, selectUser }) => {
     return (
         <div className="w-full flex h-[100%]   justify-start  items-center ">
             <div className={`h-[90%] flex justify-center items-center w-10   border rounded-full p-1 ms-5 ${bgcolour} bg-opacity-50`}>
-                <h1 className="  ">{curentUser?.firstname?.[0].toUpperCase() + curentUser?.lastName?.[0].toUpperCase()}</h1>
+                <h1 className="  ">{curentUser?.firstname?.[0].toUpperCase()||'' + curentUser?.lastName?.[0].toUpperCase() ||''}</h1>
             </div>
             <div className="h-[90%] flex justify-start items-center w-1/4  p-1 ms-5  ">
-                <h1 className=" ">{curentUser?.firstname + ' ' + curentUser?.lastName}</h1>
+                <h1 className=" ">{curentUser?.firstname||'' + ' ' + curentUser?.lastName ||''}</h1>
             </div>
             <div className="h-[90%] flex justify-start items-center w-1/4  p-1 ms-5  ">
                 <h1 className=" ">{curentUser?.email?.toLowerCase()}</h1>

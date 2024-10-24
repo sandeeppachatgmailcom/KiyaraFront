@@ -4,32 +4,32 @@ const userSlice = createSlice({
     name: 'user',
     initialState: {
         user: {
-            name:'sandeep',
-            menuList:{
-                dashBoard:{
-                        access:true,
-                        link:'/adminHome/dashBoard'
-                        },
-                clients:{
-                        access:true,
-                        link:'/adminHome/clients',
-                        },
-                users:{ 
-                        access:true,
-                        link:'/adminHome/users',
-                        } ,
-                }
-        }
+            name: 'sandeep',
+            menuList: {
+                dashBoard: {
+                    access: true,
+                    link: '/adminHome/dashBoard',
+                },
+                clients: {
+                    access: true,
+                    link: '/adminHome/clients',
+                },
+                users: { 
+                    access: true,
+                    link: '/adminHome/users',
+                },
+            },
+        },
     },
-    reducer: {
-        login: (state, action) => {
+    reducers: {   
+        userlogin: (state, action) => {
             state.user = action.payload;
         },
-        logout: (state, action) => {
+        userlogout: (state) => {
             state.user = {};
-        }
-    }
-})
+        },
+    },
+});
 
-export const { login, logout } = userSlice.actions
-export default   userSlice.reducer
+export const { userlogin, userlogout } = userSlice.actions;
+export default userSlice.reducer;

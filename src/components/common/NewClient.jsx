@@ -6,8 +6,9 @@ import useCheckPanValid from "../../hooks/useCheckPanValid";
 import nodeServer from "../../api/axios";
 import { userApi } from "../../api/api";
 import { toast, ToastContainer } from "react-toastify";
+import { socket } from "./Header";
  
-
+ 
 
 
 const NewClient = ({ closeWindow, userType,inputUser }) => {
@@ -50,6 +51,7 @@ const NewClient = ({ closeWindow, userType,inputUser }) => {
   useEffect(()=>{
     const temp = {
       ...inputUser,
+      userType:userType,
       email:{
         value: inputUser.email,
         valid: true
@@ -59,8 +61,6 @@ const NewClient = ({ closeWindow, userType,inputUser }) => {
         valid: true,
         isLegal: true,
         onlineVerified: true
-      
-
       }
       
     }
@@ -88,8 +88,6 @@ const NewClient = ({ closeWindow, userType,inputUser }) => {
       let valid = validateEmail(value)
       temp[name] = { value, valid }
     }
-
-
     else {
       temp[name] = value
     }
@@ -101,12 +99,15 @@ const NewClient = ({ closeWindow, userType,inputUser }) => {
       const userData = {
         ...user,
         email:user.email.value,
-        panCard:user.panCard?.value?.toUpperCase()
+        panCard:user.panCard?.value?.toUpperCase(),
+        userType:userType
       }
       const result = await nodeServer.post(userApi.create,{...userData})
-      console.log(result,'reult')
+      console.log(result,'result')
+      toast.success(result.data.message)
       if(result.data.status){
         toast.success(result.data.message)
+        socket.emit('userUpdated',result.data)
         setUser(emptyuser)
         closeWindow()
         
@@ -123,7 +124,7 @@ const NewClient = ({ closeWindow, userType,inputUser }) => {
   return (
     <div className="w-full justify-between flex  overflow-hidden flex-col h-[100%] border bg-opacity-10">
        
-      <div className="h-10 items-center w-full bg-violet-600 flex justify-between">
+      <div className="h-10 items-center w-full bg-gray-600 flex justify-between">
         <h1 className="p-2 text-white"> {userType + ' Registration '}</h1>
         <CloseIcon onClick={closeWindow} className="me-2 cursor-pointer text-white" />
        
