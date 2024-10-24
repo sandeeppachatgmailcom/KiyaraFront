@@ -2,5 +2,7 @@
 export const userApi = {
     login:'/user/login',
     create:'/user/createUser',
-    getActiveClients:'/user/getActiveClients'
+    getActiveClients:'/user/getActiveClients',
+    turnUserOnOff:'/user/turnUserOnOff',
+    deleteUser:'/user/deleteUser',
 }

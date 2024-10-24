@@ -33,7 +33,7 @@ const ClientComponent = () => {
     }, [])
 
     return (
-        <div className=" w-full h-[100%] flex flex-col ">
+        <div className=" w-full h-[100%] flex flex-col bg-teal-200 bg-opacity-10 ">
            
             <div className=" w-full h-[100%] border flex flex-col  ">
                 <div onClick={() => setNewClient(true)} className="w-10 h-10 border-8  rounded-full rounded-br-none rotate-45 cursor-pointer flex justify-center items-center  bg-yellow-400 absolute top-5 end-5 ">
@@ -42,7 +42,7 @@ const ClientComponent = () => {
                
                 <div className="w-full   h-[100%]  flex  ">
                     <div className="w-full h-[100%]  border overflow-scroll  flex flex-col  " >
-                        <div className="w-full flex h-10 border justify-start bg-blue-600 bg-opacity-15 items-center ">
+                        <div className="w-full flex h-10 border justify-start border-teal-600 bg-teal-600 bg-opacity-15 items-center ">
                             <div className="h-[90%] flex justify-center items-center w-10     rounded-full p-1 ms-5  bg-opacity-50 ">
 
                             </div>
@@ -59,8 +59,8 @@ const ClientComponent = () => {
                         </div>
                         {clients?.map((client) => {
                              
-                            return <div  className="h-12 border-white border w-full cursor-pointer hover:bg-blue-200 hover:bg-opacity-30 ">
-                                <SingleUser selectUser={()=>{setSelectedUser(client);setNewClient(true)}} key={client.email} user={client} />
+                            return <div  className="h-10 border-gray-400 border-t-0 border w-full cursor-pointer hover:bg-teal-200 hover:bg-opacity-30 ">
+                                <SingleUser bgcolour={"bg-teal-800 text-white"} selectUser={()=>{setSelectedUser(client);setNewClient(true)}} key={client.email} user={client} />
                             </div>
                         })
 
