@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import useDynamicIcons from "../../hooks/useDynamicIcons"
-//import SingleUser from "../user/SingleUser.jsx"
+import SingleUser from "../user/SingleUser"
 
 import nodeServer from "../../api/axios"
 import { userApi } from "../../api/api"
-import SingleUser from "../user/SingleUser"
+
 
 const UserComponent = () => {
     const getMyIcon = useDynamicIcons()
