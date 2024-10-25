@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import useDynamicIcons from "../../hooks/useDynamicIcons"
-import turnUserEnabledDisabled from "../../utils/turnUserENabledDisabled"
+import turnUserEnabledDisabled from "../../utils/turnUserEnabledDisabled"
 import { toast, ToastContainer } from "react-toastify"
 import confirmAction from "../common/confirmAction"
 import deleteUser from "../../utils/deleteUser"

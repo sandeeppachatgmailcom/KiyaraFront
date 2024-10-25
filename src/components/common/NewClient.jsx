@@ -25,7 +25,6 @@ const NewClient = ({ closeWindow, userType,inputUser,updateParent}) => {
     },
     lastName: '',
     contact: '',
-    userType: '',
     panCard: {
       value: '',
       valid: false,
