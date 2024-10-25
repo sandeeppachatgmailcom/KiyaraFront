@@ -4,7 +4,7 @@ import useDynamicIcons from "../../hooks/useDynamicIcons"
 
 import nodeServer from "../../api/axios"
 import { userApi } from "../../api/api"
-import SingleUser from "../user/singleUser"
+import SingleUser from "../user/SingleUser"
 
 const UserComponent = () => {
     const getMyIcon = useDynamicIcons()
