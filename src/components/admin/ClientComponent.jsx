@@ -27,6 +27,21 @@ const ClientComponent = () => {
 
         }
     }
+    const updateParentList = (userId) => {
+        fetchClients()              
+    };
+
+    const updateParent = (tempUser)=>{
+        const temp =  clients.map((user)=>{
+            if(user.userId == tempUser.userId) return tempUser
+            else return user
+        })
+        console.log(temp)
+        setClients(temp)
+
+
+    }
+    
 
     useEffect(() => {
         fetchClients()
@@ -61,9 +76,9 @@ const ClientComponent = () => {
 
                         </div>
                         {clients?.map((client) => {
-                             console.log(client,client.userId,'22222222222')
-                            return <div  key={client.userId}  className="h-10 border-gray-400 border-t-0 border w-full cursor-pointer hover:bg-teal-200 hover:bg-opacity-30 ">
-                                <SingleUser bgcolour={"bg-teal-800 text-white"} selectUser={()=>{setSelectedUser(client);setNewClient(true)}} key={client.email} user={client} />
+                              
+                            return <div  key={client.userId} className="h-10 border-gray-400 border-t-0 border w-full cursor-pointer hover:bg-teal-200 hover:bg-opacity-30 ">
+                                <SingleUser  updateParentList={()=>updateParentList()}  bgcolour={"bg-teal-800 text-white"} selectUser={()=>{setSelectedUser(client);setNewClient(true)}} key={client.email} user={client} />
                             </div>
                         })
 
@@ -73,8 +88,8 @@ const ClientComponent = () => {
                 </div>
                 {newClient &&
                     <div className="w-full absolute  h-full flex bg-gray-400 bg-opacity-55 justify-center items-center">
-                        <div className="w-[30%] h-[50%] rounded-md overflow-hidden   ">
-                            <NewClient inputUser={selectedUser} userType="Client" closeWindow={() => setNewClient(false)} />
+                        <div className=" w-3/4 lg:w-[30%] lg:h-[50%] rounded-md overflow-scroll   ">
+                            <NewClient updateParent={()=>updateParentList()} inputUser={selectedUser} userType="Client" closeWindow={() => setNewClient(false)} />
                         </div>
                     </div>
                 }

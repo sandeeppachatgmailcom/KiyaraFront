@@ -7,21 +7,19 @@ const MenuBar = () => {
     const menuList = useSelector((state) => state?.user?.user?.menuList);
     const getMyIconFor = useDynamicIcons();
     const navigate = useNavigation();
-    useEffect(()=>{
-        console.log(menuList,'menuList')
-    },[menuList])
+ 
     const handleNavigation = (menuName) => {
         navigate(menuName);
     };
 
     return (
-        <div className="w-full h-[100%] flex flex-col justify-center items-center bg- -400 rounded-md">
+        <div className="w-full lg:h-[100%]   flex lg:flex-col  flex-row justify-center items-center h-20 rounded-md">
             {console.log({...menuList},Object.keys(menuList).filter((menu) =>{return  menuList[menu]}) )}
             {menuList && Object.keys(menuList)?.length
                 ? Object.keys(menuList)
                       .filter((menu) => menuList[menu]?.access) // Filter menus with access
                       .map((menu) => {
-                        console.log(menuList[menu],'aaaaaaaaaaaaaaaaaaaaaaaa')
+                        
                           const IconComponent = getMyIconFor(menu);
                           return (
                               <div

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import useDynamicIcons from "../../hooks/useDynamicIcons"
 import turnUserEnabledDisabled from "../../utils/turnUserENabledDisabled"
-import { toast } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 import confirmAction from "../common/confirmAction"
 import deleteUser from "../../utils/deleteUser"
 
-const SingleUser = ({ bgcolour, user, selectUser }) => {
+const SingleUser = ({ bgcolour, user, selectUser,updateParentList }) => {
 
     const [curentUser, setCurrentUser] = useState(user)
     const getMyIcon = useDynamicIcons()
@@ -18,7 +18,8 @@ const SingleUser = ({ bgcolour, user, selectUser }) => {
         setCurrentUser(user)
     }, [user])
     const handleuserEnableDisable = async () => {
-        const confirmed = await confirmAction('Are you sure you want to modify?');
+        const confirmed = await confirmAction(`Are you sure you want to modify ${curentUser.firstname || ''}?`);
+        
         if (confirmed) {
             const result = await turnUserEnabledDisabled(curentUser.userId)
             if (result.status) {
@@ -34,10 +35,12 @@ const SingleUser = ({ bgcolour, user, selectUser }) => {
 
     const handleDeleteUser =async ()=>{
         try {
+             
             const confirmed = await confirmAction(`Are you sure you want to delete ${curentUser.firstname || ''}?`);
+            
             if (confirmed) {
                 const result = await deleteUser(curentUser.userId)
-                console.log(result,'resultresultresult')
+                 
                 if (result.status) {
                     const temp = {
                         ...curentUser,
@@ -45,6 +48,7 @@ const SingleUser = ({ bgcolour, user, selectUser }) => {
                     }
                     setCurrentUser(temp)
                     toast.success(result.message)
+                    updateParentList()
                 }
          
             }
@@ -59,6 +63,7 @@ const SingleUser = ({ bgcolour, user, selectUser }) => {
 
     return (
         <div className="w-full flex h-[100%]   justify-start  items-center ">
+            <ToastContainer/>
             <div className={`h-[90%] flex justify-center items-center w-10   border rounded-full p-1 ms-5 ${bgcolour} bg-opacity-50`}>
                 <h1 className="  ">{curentUser?.firstname?.[0].toUpperCase()||'' + curentUser?.lastName?.[0].toUpperCase() ||''}</h1>
             </div>

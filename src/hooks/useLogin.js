@@ -9,8 +9,6 @@ const login = async (userData) => {
         
         if (pureData.status) {
             const result = await nodeServer.post(userApi.login, { ...pureData.sanitizedData })  
-            console.log(result,'*********')
-             
             if (result.data) {
                 return result.data
             }
