@@ -14,7 +14,7 @@ const MenuBar = () => {
 
     return (
         <div className="w-full lg:h-[100%]   flex lg:flex-col  flex-row justify-center items-center h-20 rounded-md">
-            {console.log({...menuList},Object.keys(menuList).filter((menu) =>{return  menuList[menu]}) )}
+            
             {menuList && Object.keys(menuList)?.length
                 ? Object.keys(menuList)
                       .filter((menu) => menuList[menu]?.access) // Filter menus with access

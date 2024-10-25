@@ -14,7 +14,6 @@ function App() {
     
    <div className='w-full   h-screen '>
     
-      <ToastContainer />
       {Object.keys(user).length ? <div className='    rounded-xl p-1 md:p-0 md:rounded-none overflow-hidden bottom-0 justify-center lg:relative h-[10%] w-full '>
           <Header/>
       </div>

@@ -43,7 +43,9 @@ const NewClient = ({ closeWindow, userType,inputUser,updateParent}) => {
   useEffect(()=>{
     const temp = {
       ...user,
-      userType:userType || 'Client'
+      userType:userType || 'Client',
+      designation : 'DN10000008'
+
     }
     setUser(temp)
   },[userType])
@@ -105,6 +107,7 @@ console.log(inputUser,'inputUser')
         panCard:user.panCard?.value?.toUpperCase(),
         userType:userType
       }
+      console.log(userData,'userData')
       const result = await nodeServer.post(userApi.create,{...userData})
       
       if(result.data.status){
@@ -126,7 +129,7 @@ console.log(inputUser,'inputUser')
 
   return (
     <div className="w-full justify-between flex  overflow-scroll  flex-col h-[100%] border bg-opacity-10">
-        <ToastContainer/>
+       {/* // <ToastContainer/> */}
       <div className="h-10 items-center w-full bg-gray-600 flex justify-between">
         <h1 className="p-2 text-white"> {userType + ' Registration '}</h1>
         <CloseIcon onClick={closeWindow} className="me-2 cursor-pointer text-white" />
