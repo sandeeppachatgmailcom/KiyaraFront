@@ -2,9 +2,10 @@ import { useEffect, useState } from "react"
 import useDynamicIcons from "../../hooks/useDynamicIcons"
 import NewClient from "../common/NewClient"
 import { ToastContainer } from "react-toastify"
-import SingleUser from "../user/singleUser"
+//import SingleUser from "../user/singleUser"
 import nodeServer from "../../api/axios"
 import { userApi } from "../../api/api"
+import SingleUser from "../user/SingleUser"
 
 const ClientComponent = () => {
     const getMyIcon = useDynamicIcons()
@@ -38,8 +39,6 @@ const ClientComponent = () => {
         })
         console.log(temp)
         setClients(temp)
-
-
     }
     
 
