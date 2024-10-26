@@ -21,8 +21,7 @@ const LoginBox = () => {
         password:''
     })
     useEffect(()=>{
-         
-        if (Object.keys(activeUser)?.length ) navigate('adminHome')
+        // if (Object.keys(activeUser)?.length ) navigate('adminHome')
     },[activeUser])
     const handleChange = (event)=>{
         const {name,value} = event.target
