@@ -12,7 +12,6 @@ const Header = () => {
     const user = useSelector((state) => state.user.user);
     useSocket();
  
-     
     return (
         <div className="w-full h-[100%] flex gap-4 font-bold justify-end items-center p-5">
             <ToastContainer/>
