@@ -21,7 +21,7 @@ const LoginBox = () => {
         password:''
     })
     useEffect(()=>{
-        console.log(activeUser)
+         
         if (Object.keys(activeUser)?.length ) navigate('adminHome')
     },[activeUser])
     const handleChange = (event)=>{
@@ -30,13 +30,13 @@ const LoginBox = () => {
             ...user,
             [name]:value
         }
-        console.log(temp,'temp data before update')
+        
         setUser(temp)
     }
     const saveData =async ()=>{
         const result = await login(user)
         if(result?.status){
-            console.log(result)
+             
            // toast.success(result?.message );
             dispatch(userlogin(result))
             

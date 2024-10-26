@@ -6,7 +6,7 @@ import useCheckPanValid from "../../hooks/useCheckPanValid";
 import nodeServer from "../../api/axios";
 import { userApi } from "../../api/api";
 import { toast, ToastContainer   } from "react-toastify"; 
-import { socket } from "./Header";
+ 
  
  
 
@@ -111,7 +111,6 @@ console.log(inputUser,'inputUser')
       
       if(result.data.status){
         toast.success(result.data.message|| 'Operation successful')
-        socket.emit('userUpdated',result.data)
         setUser(emptyuser)
         updateParent()
         closeWindow()
