@@ -19,7 +19,6 @@ const SingleUser = ({ bgcolour, user, selectUser, updateParentList }) => {
     }, [user])
     const handleuserEnableDisable = async () => {
         const confirmed = await confirmAction(`Are you sure you want to modify ${curentUser.firstname || ''}?`);
-
         if (confirmed) {
             const result = await turnUserEnabledDisabled(curentUser.userId)
             if (result.status) {
@@ -36,8 +35,7 @@ const SingleUser = ({ bgcolour, user, selectUser, updateParentList }) => {
     const handleDeleteUser = async () => {
         try {
 
-            const confirmed = await confirmAction(`Are you sure you want to delete ${curentUser.firstname || ''}?`);
-
+             const confirmed = await confirmAction(`Are you sure you want to delete ${curentUser.firstname || ''}?`);
             if (confirmed) {
                 const result = await deleteUser(curentUser.userId)
 
@@ -63,7 +61,7 @@ const SingleUser = ({ bgcolour, user, selectUser, updateParentList }) => {
 
     return (
         <div className="w-full flex   lg:flex-row flex-col rounded-lg  h-[100%]   justify-start  items-center ">
-            <ToastContainer />
+            
             <div className="   justify-start items-center       flex w-full   lg:w-4/12 lg:justify-start ">
                 <div className={`h-10 w-10 m-1  flex justify-center items-center            rounded-full   ${bgcolour}`}>
                     <h1 className=" ">

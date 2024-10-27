@@ -16,14 +16,14 @@ const notificationSlice = createSlice({
                 read: false
             }]
         },
-        messagesToSend: [] // Added initialization for messagesToSend
+        messagesToSend: []  
     },
     reducers: {
         receiveNotification: (state, action) => {
             state.messages.received.push(action.payload);
         },
         sendNotification: (state, action) => {
-            state.messages.sent.push(action.payload);
+              state.messages.sent.push(action.payload) 
         },
         popNotification: (state) => {
             const temp = state?.messages?.sent.slice(); 

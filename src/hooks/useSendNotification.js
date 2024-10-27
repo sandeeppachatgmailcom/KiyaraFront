@@ -1,18 +1,19 @@
-import { useDispatch } from "react-redux"
+// useSendNotification.js
+import { useDispatch } from "react-redux";
 import { popNotification } from "../store/notificationSlice";
 
+const useSendNotification = () => {
+  const dispatch = useDispatch();
 
-
-const useSendNotification = ()=>{
-    const dispatch = useDispatch()
-    
-    return async function sendNotification (socket,message){
-        console.log('object',message)
-         await socket.emit("sentNotofication", message);
-       // dispatch(popNotification())
-    } 
-    
-    
+  return async function sendNotification(socket, message) {
+    try {
+      console.log('Sending notification:', message);
+      await socket.emit("sentNotification", message);
+      dispatch(popNotification());
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  };
 }
 
-export default useSendNotification
+export default useSendNotification;

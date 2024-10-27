@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux"
 import { toast } from "react-toastify";
 
 
-const useReceiveNotofication = ()=>{
+const useReceiveNotification = ()=>{
     try {
         const dispatch = useDispatch();
         return function (message){
@@ -14,4 +14,4 @@ const useReceiveNotofication = ()=>{
     }
 }
 
-export default useReceiveNotofication
+export default useReceiveNotification

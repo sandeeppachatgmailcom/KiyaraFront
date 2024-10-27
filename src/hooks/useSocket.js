@@ -1,28 +1,31 @@
+// useSocket.js
 import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useSendNotification from './useSendNotification';
-import useReceiveNotofication from './useReceiveNotofication';
 import useLogout from './useLogout';
+import useReceiveNotification from './useReceiveNotofication';
+import { popNotification } from '../store/notificationSlice';
 
 const useSocket = () => {
-  
-    const notification = useSelector((state)=>state?.notification?.messages?.sent)
-    const sendMessage = useSendNotification()
-    const receiveMessage = useReceiveNotofication();
-    const handleLogout = useLogout();
-    const user = useSelector((state) => state.user.user);
-    const socketRef = useRef(null);
+  const notification = useSelector((state) => state?.notification?.messages?.sent);
+  const sendMessage = useSendNotification();
+  const receiveMessage = useReceiveNotification();
+  const handleLogout = useLogout();
+  const user = useSelector((state) => state.user.user);
+  const socketRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    // Initialize socket connection
     if (!socketRef.current) {
-      
       socketRef.current = io('ws://localhost:5000');
     }
 
     const socket = socketRef.current;
 
+    // Join or logout based on user state
     if (user?.userId) {
       socket.emit('join', { userId: user.userId });
       socket.emit('addUser', { userId: user.userId });
@@ -31,29 +34,31 @@ const useSocket = () => {
       handleLogout();
     }
 
-    
+    // Emit notification if available
+    if (notification.length) {
+      const currentNotification = JSON.parse(JSON.stringify(notification[0]));
+      let x = socket.emit("sentNotification", currentNotification);
+      console.log('object',x,currentNotification)
+      const c = setTimeout(()=>{
+        dispatch(popNotification());
+          clearTimeout(c)
+      },1000)
+    }
+
+    // Handle incoming notifications
     socket.on('receiveNotification', (message) => {
-    console.log(message)
+      console.log('Received notification:', message);
       toast.info(message?.message);
       receiveMessage(message);
     });
 
-     
+    // Cleanup on unmount
     return () => {
-      if (socketRef.current) {
-        socket.off('receiveNotification');
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
+      socket.off('receiveNotification');
+      socket.disconnect();
+      socketRef.current = null;
     };
-  }, [user, handleLogout, receiveMessage]);
-
-  useEffect(() => {
-     
-    if (notification.length && socketRef.current) {
-      sendMessage(socketRef.current, notification[0]);
-    }
-  }, [notification, sendMessage]);
+  }, [user, handleLogout, receiveMessage, notification, dispatch]);
 
   return socketRef.current;
 };

@@ -6,6 +6,8 @@ import useCheckPanValid from "../../hooks/useCheckPanValid";
 import nodeServer from "../../api/axios";
 import { userApi } from "../../api/api";
 import { toast, ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { sendNotification } from "../../store/notificationSlice";
 
 const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
   const emptyuser = {
@@ -17,10 +19,12 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
     contact: '',
     panCard: { value: '', valid: false, isLegal: false, onlineVerified: false },
   };
+  const activeUSer = useSelector((state)=>state.user.user)
 
   const getMyIcon = useDynamicIcons();
   const CloseIcon = getMyIcon('close');
   const VerifiedIcon = getMyIcon('verified');
+  const dispatch = useDispatch()
   
   const [user, setUser] = useState(emptyuser);
   const [panValid, setPanValid] = useState(false);
@@ -70,19 +74,25 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
       };
       Object.keys(userData).map((key)=>{
         if(!userData[key]) delete userData[key]
-        if(!userData.password) toast.error('password not given')
-           
+        //if(!userData.password) toast.error('password not given')
+
       }) 
 
 
 
       console.log(userData,'hello my data')
       const result = await nodeServer.post(userApi.create, { ...userData });
+      console.log(result.data,'hello my result')
       if (result.data.status) {
         toast.success(result.data.message || 'Operation successful');
+        dispatch( sendNotification({
+          receiverId: result?.data?.userId,
+          message: "my dear user your data hasbeen modified ",
+          senderId: activeUSer?.userId
+      })) 
         setUser(emptyuser);
         updateParent();
-        closeWindow();
+       // closeWindow();
       } else {
         toast.error(result.data.message);
       }
@@ -93,7 +103,7 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
 
   return (
     <div className="w-full flex flex-col h-full  rounded-lg shadow-md    ">
-      <ToastContainer />
+       
       
       <div className="flex items-center bg-white bg-opacity-10 justify-between mb-4 border-b p-2">
         <h1 className="text-xl font-semibold text-white-700"> {userType} Registration</h1>

@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import useDynamicIcons from "../../hooks/useDynamicIcons"
 import NewClient from "../common/NewClient"
-import { ToastContainer } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 //import SingleUser from "../user/singleUser"
 import nodeServer from "../../api/axios"
 import { userApi } from "../../api/api"
 import SingleUser from "../user/SingleUser"
+import confirmAction from "../common/confirmAction"
+import deleteUser from "../../utils/deleteUser"
 
+const MemoizedToastContainer = memo(ToastContainer);
 const ClientComponent = () => {
     const getMyIcon = useDynamicIcons()
     const [newClient, setNewClient] = useState(false)
     const IconComponent = getMyIcon('createNew')
     const [clients, setClients] = useState([])
     const [selectedUser, setSelectedUser] = useState({})
+    const IconDelete = getMyIcon('delete')
     const emptyuser = {
          
         firstname: '',
@@ -48,16 +52,15 @@ const ClientComponent = () => {
         console.log(temp)
         setClients(temp)
     }
- 
-
+    
     useEffect(() => {
         fetchClients()
     }, [])
 
     return (
         <div className=" w-full h-[100%] flex flex-col   ">
-            <ToastContainer/>
-            <div className=" w-full h-[100%] border flex flex-col relative ">
+             
+            <div className=" w-full h-[100%]   flex flex-col relative ">
                 <div onClick={() => {setNewClient(true);setSelectedUser(emptyuser)}} className="w-12 h-12 border-8  rounded-full rounded-br-none rotate-45 cursor-pointer flex justify-center items-center  bg-teal-800 text-white absolute top-5 end-5 ">
                     <IconComponent className='w-[80%] h-[80%] -rotate-45  ' />
                 </div>
@@ -65,18 +68,18 @@ const ClientComponent = () => {
 
                 </div>
                 <div className="w-full   h-[100%]  flex  ">
-                    <div className="w-full h-[100%]  border overflow-scroll  flex flex-col  " >
+                    <div className="w-full h-[100%]   overflow-scroll  flex flex-col  " >
                          
                         <div className="w-full flex flex-col gap-1 ">
                             {clients?.map((client) => {
-                                return <div key={client.userId} className="lg:h-12 bg-gradient-to-r border-gray-500 border-opacity-25   rounded-md  shadow-md    border w-full cursor-pointer hover:bg-sky-200 hover:bg-opacity-40">
+                                return <div key={client.userId} className="flex justify-center p-1 lg:h-12 bg-gradient-to-r border-gray-500 border-opacity-25   rounded-md  shadow-md    border w-full cursor-pointer hover:bg-sky-200 hover:bg-opacity-40">
                                 <SingleUser 
                                     updateParentList={() => updateParentList()}  
                                     bgcolour={"bg-sky-800 text-white"} 
                                     selectUser={() => { setSelectedUser(client); setNewClient(true) }} 
                                     key={client.email} 
                                     user={client} 
-                                /> 
+                                />
                             </div>
                             })
 

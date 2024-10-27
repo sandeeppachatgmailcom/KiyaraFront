@@ -1,8 +1,11 @@
 import { useSelector } from "react-redux";
 import useDynamicIcons from "../../hooks/useDynamicIcons";
 import useLogout from "../../hooks/useLogout"; 
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
 import useSocket from "../../hooks/useSocket";
+import { memo, useEffect } from "react";
+import useNavigation from "../../hooks/useNavigation";
+// const MemoizedToastContainer = memo(ToastContainer);
 
 
 const Header = () => {
@@ -10,11 +13,11 @@ const Header = () => {
     const LogoutIcon = getMyIcon('logOut');
     const handleLogout = useLogout();
     const user = useSelector((state) => state.user.user);
-   // useSocket();
- 
+    useSocket();
+
     return (
         <div className="w-full h-[100%] flex gap-4 font-bold justify-end items-center p-5">
-            <ToastContainer/>
+            {/* <MemoizedToastContainer/> */}
             <h1 className="text-sm uppercase">
                 {user?.firstname || 'Guest'}
             </h1>
