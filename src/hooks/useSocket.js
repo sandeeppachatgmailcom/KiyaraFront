@@ -20,7 +20,8 @@ const useSocket = () => {
   useEffect(() => {
     // Initialize socket connection
     if (!socketRef.current) {
-      socketRef.current = io('ws://localhost:5000');
+      // socketRef.current = io('ws://localhost:5000');
+      socketRef.current = io('ws:://kiarabackend.onrender.com')
     }
 
     const socket = socketRef.current;
