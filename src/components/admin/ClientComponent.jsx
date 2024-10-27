@@ -12,12 +12,20 @@ const ClientComponent = () => {
     const [newClient, setNewClient] = useState(false)
     const IconComponent = getMyIcon('createNew')
     const [clients, setClients] = useState([])
-    const [selectedUser,setSelectedUser] = useState({})
+    const [selectedUser, setSelectedUser] = useState({})
+    const emptyuser = {
+         
+        firstname: '',
+        email: '',
+        password:'',
+        lastName: '',
+        contact: '',
+        panCard:'',
+      };
 
     const fetchClients = async () => {
         try {
             const result = await nodeServer.get(userApi.getActiveClients)
-            console.log(result.data.data)
             if (result.data) {
                 setClients(result.data.data)
             }
@@ -29,66 +37,59 @@ const ClientComponent = () => {
         }
     }
     const updateParentList = (userId) => {
-        fetchClients()              
+        fetchClients()
     };
 
-    const updateParent = (tempUser)=>{
-        const temp =  clients.map((user)=>{
-            if(user.userId == tempUser.userId) return tempUser
+    const updateParent = (tempUser) => {
+        const temp = clients.map((user) => {
+            if (user.userId == tempUser.userId) return tempUser
             else return user
         })
         console.log(temp)
         setClients(temp)
     }
-    
+ 
 
     useEffect(() => {
         fetchClients()
     }, [])
 
     return (
-        <div className=" w-full h-[100%] flex flex-col bg-teal-200 bg-opacity-10 ">
-           
+        <div className=" w-full h-[100%] flex flex-col   ">
+            <ToastContainer/>
             <div className=" w-full h-[100%] border flex flex-col relative ">
-                <div onClick={() => setNewClient(true)} className="w-12 h-12 border-8  rounded-full rounded-br-none rotate-45 cursor-pointer flex justify-center items-center  bg-teal-800 text-white absolute top-5 end-5 ">
+                <div onClick={() => {setNewClient(true);setSelectedUser(emptyuser)}} className="w-12 h-12 border-8  rounded-full rounded-br-none rotate-45 cursor-pointer flex justify-center items-center  bg-teal-800 text-white absolute top-5 end-5 ">
                     <IconComponent className='w-[80%] h-[80%] -rotate-45  ' />
                 </div>
-               
-               <div className="h-20">
+                <div className="h-20">
 
-               </div>
+                </div>
                 <div className="w-full   h-[100%]  flex  ">
                     <div className="w-full h-[100%]  border overflow-scroll  flex flex-col  " >
-                        <div className="w-full flex h-10 border justify-start border-teal-600 bg-teal-600 bg-opacity-15 items-center ">
-                            <div className="h-[90%] flex justify-center items-center w-10     rounded-full p-1 ms-5  bg-opacity-50 ">
+                         
+                        <div className="w-full flex flex-col gap-1 ">
+                            {clients?.map((client) => {
+                                return <div key={client.userId} className="lg:h-12 bg-gradient-to-r border-gray-500 border-opacity-25   rounded-md  shadow-md    border w-full cursor-pointer hover:bg-sky-200 hover:bg-opacity-40">
+                                <SingleUser 
+                                    updateParentList={() => updateParentList()}  
+                                    bgcolour={"bg-sky-800 text-white"} 
+                                    selectUser={() => { setSelectedUser(client); setNewClient(true) }} 
+                                    key={client.email} 
+                                    user={client} 
+                                /> 
+                            </div>
+                            })
 
-                            </div>
-                            <div className="h-[90%] flex justify-start items-start w-1/4  p-1 ms-5  ">
-                                <h1 className="font-semibold ">Name</h1>
-                            </div>
-                            <div className="h-[90%] flex justify-start items-start  w-1/4  p-1 ms-5  ">
-                                <h1 className=" ">Email</h1>
-                            </div>
-                            <div className="h-[90%] flex justify-start items-center w-1/4  p-1 ms-5  ">
-                                <h1 className=" ">contact </h1>
-                            </div>
-
+                            }
                         </div>
-                        {clients?.map((client) => {
-                              
-                            return <div  key={client.userId} className="h-10 border-gray-400 border-t-0 border w-full cursor-pointer hover:bg-teal-200 hover:bg-opacity-30 ">
-                                <SingleUser  updateParentList={()=>updateParentList()}  bgcolour={"bg-teal-800 text-white"} selectUser={()=>{setSelectedUser(client);setNewClient(true)}} key={client.email} user={client} />
-                            </div>
-                        })
 
-                        }
                     </div>
-                    
+
                 </div>
                 {newClient &&
-                    <div className="w-full absolute  h-full flex bg-gray-400 bg-opacity-55 justify-center items-center">
-                        <div className=" w-3/4 lg:w-[30%] lg:h-[50%] rounded-md overflow-scroll   ">
-                            <NewClient updateParent={()=>updateParentList()} inputUser={selectedUser} userType="Client" closeWindow={() => setNewClient(false)} />
+                    <div className="w-full absolute  h-full border rounded-md  p-1 flex  text-white  justify-center items-center">
+                        <div className=" w-3/4 lg:w-[60%]   border rounded-md overflow-scroll bg-gradient-to-b from-sky-800 to-gray-600 text-white   ">
+                            <NewClient bgcolour={"bg-sky-800 text-white"}  updateParent={() => updateParentList()} inputUser={selectedUser} userType="Client" closeWindow={() => setNewClient(false)} />
                         </div>
                     </div>
                 }

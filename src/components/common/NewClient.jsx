@@ -5,186 +5,200 @@ import validateEmail from "../../utils/validateEmail";
 import useCheckPanValid from "../../hooks/useCheckPanValid";
 import nodeServer from "../../api/axios";
 import { userApi } from "../../api/api";
-import { toast, ToastContainer   } from "react-toastify"; 
- 
- 
- 
+import { toast, ToastContainer } from "react-toastify";
 
-
-const NewClient = ({ closeWindow, userType,inputUser,updateParent}) => {
+const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
   const emptyuser = {
     userType: userType,
     firstname: '',
-    email: {
-      value: '',
-      valid: false
-    },
-    password: {
-      value: '',
-      valid: false
-    },
+    email: { value: '', valid: false },
+    password: { value: '', valid: false },
     lastName: '',
     contact: '',
-    panCard: {
-      value: '',
-      valid: false,
-      isLegal: false,
-      onlineVerified: false
-    },
-  
-  }
+    panCard: { value: '', valid: false, isLegal: false, onlineVerified: false },
+  };
+
   const getMyIcon = useDynamicIcons();
   const CloseIcon = getMyIcon('close');
-  const [panValid, setPanValid] = useState(false)
-  const checkValidPanOnline = useCheckPanValid()
-  const [user, setUser] = useState(emptyuser)
-  const VerfiedIcon = getMyIcon('verified');
-  useEffect(()=>{
-    const temp = {
-      ...user,
-      userType:userType || 'Client',
-      designation : 'DN10000008'
+  const VerifiedIcon = getMyIcon('verified');
+  
+  const [user, setUser] = useState(emptyuser);
+  const [panValid, setPanValid] = useState(false);
+  const checkValidPanOnline = useCheckPanValid();
 
-    }
-    setUser(temp)
-  },[userType])
+  useEffect(() => {
+    const temp = { ...user, userType: userType, designation: userType == 'Client'?'DN10000008':'DN10000009' };
+    setUser(temp);
+  }, [userType]);
 
-  useEffect(()=>{
-console.log(inputUser,'inputUser')
-
+  useEffect(() => {
     const temp = {
       ...inputUser,
-      userType:userType,
-      email:{
-        value: inputUser.email,
-        valid: true
-      } ,
-      panCard:{
-        value: inputUser.panCard,
-        valid: true,
-        isLegal: true,
-        onlineVerified: true
-      }
-      
-    }
-    setUser(temp)
-  },[inputUser])
+      userType: userType,
+      email: { value: inputUser.email, valid: true },
+      panCard: { value: inputUser.panCard, valid: true, isLegal: true, onlineVerified: true }
+    };
+    setUser(temp);
+  }, [inputUser]);
 
   const handleChange = async (e) => {
-    const temp = {
-      ...user,
-    }
+    const temp = { ...user };
+    let { name, value } = e.target;
 
-    let { name, value } = e.target
     if (name === 'panCard') {
       value = await value.slice(0, 10);
       const valid = validatePan(value.toUpperCase());
-      const onlineVerified = value?.length > 9 ? await checkValidPanOnline(value.toUpperCase()) : false;
-      temp[name] = {
-        value,
-        valid,
-        onlineVerified: onlineVerified ? onlineVerified : false,
-      };
+      const onlineVerified = value.length > 9 ? await checkValidPanOnline(value.toUpperCase()) : false;
+      temp[name] = { value, valid, onlineVerified: onlineVerified || false };
+    } else if (name === 'email') {
+      temp[name] = { value, valid: validateEmail(value) };
+    } else {
+      temp[name] = value;
     }
+    setUser(temp);
+  };
 
-    else if (name == 'email') {
-      let valid = validateEmail(value)
-      temp[name] = { value, valid }
-    }
-    else {
-      temp[name] = value
-    }
-    setUser(temp)
-  }
-
-  const handleSave = async ()=>{
+  const handleSave = async () => {
     try {
-       
       const userData = {
         ...user,
-        email:user.email.value,
-        panCard:user.panCard?.value?.toUpperCase(),
-        userType:userType
-      }
-      console.log(userData,'userData')
-      const result = await nodeServer.post(userApi.create,{...userData})
-      
-      if(result.data.status){
-        toast.success(result.data.message|| 'Operation successful')
-        setUser(emptyuser)
-        updateParent()
-        closeWindow()
-        
-      }
-      else {
-        toast.error(result.data.message)
+        email: user.email.value,
+        panCard:  user.panCard?.value?.toUpperCase(), 
+        userType: userType,
+        designation: userType == 'Client'?'DN10000008':'DN10000009'
+                 
+      };
+      Object.keys(userData).map((key)=>{
+        if(!userData[key]) delete userData[key]
+        if(!userData.password) toast.error('password not given')
+           
+      }) 
+
+
+
+      console.log(userData,'hello my data')
+      const result = await nodeServer.post(userApi.create, { ...userData });
+      if (result.data.status) {
+        toast.success(result.data.message || 'Operation successful');
+        setUser(emptyuser);
+        updateParent();
+        closeWindow();
+      } else {
+        toast.error(result.data.message);
       }
     } catch (error) {
-      
+      toast.error("Error occurred during saving");
     }
-  }
-
+  };
 
   return (
-    <div className="w-full justify-between flex  overflow-scroll  flex-col h-[100%] border bg-opacity-10">
-       {/* // <ToastContainer/> */}
-      <div className="h-10 items-center w-full bg-gray-600 flex justify-between">
-        <h1 className="p-2 text-white"> {userType + ' Registration '}</h1>
-        <CloseIcon onClick={closeWindow} className="me-2 cursor-pointer text-white" />
-       
+    <div className="w-full flex flex-col h-full  rounded-lg shadow-md    ">
+      <ToastContainer />
+      
+      <div className="flex items-center bg-white bg-opacity-10 justify-between mb-4 border-b p-2">
+        <h1 className="text-xl font-semibold text-white-700"> {userType} Registration</h1>
+        <CloseIcon onClick={closeWindow} className="cursor-pointer text-white hover:text-red-500 transition duration-200" />
       </div>
 
-      <div className="flex lg:flex-row justify-center items-center lg:flex-wrap flex-col   p-4  ">
+      <div className="flex flex-col lg:flex-row lg:flex-wrap justify-center gap-4 p-4">
         {/* First Name */}
-        <div className="w-full lg:w-5/12 p-1 relative shadow-lg  m-1 ">
-          <label className={`${!user?.firstname?.length ? 'text-red-600' : ''} absolute text-sm bg-transparent px-1 text-gray-700 -top-3 left-2`} > First Name </label>
-          <input type="text" onChange={(e) => handleChange(e)} value={user?.firstname} name="firstname" placeholder="Enter your first name" className="h-10 px-4 text-sm border w-full border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent shadow-md transition duration-200 ease-in-out text-gray-800 mt-4" />
-        </div>
+        <InputField 
+          label="First Name" 
+          name="firstname" 
+          value={user.firstname} 
+          onChange={handleChange} 
+          placeholder="Enter your first name" 
+          required 
+        />
 
         {/* Last Name */}
-        <div className="w-full lg:w-5/12 p-1 relative shadow-lg m-1 ">
-          <label className={`${!user?.lastName?.length ? 'text-red-600' : ''} absolute text-sm bg-transparent px-1 text-gray-700 -top-3 left-2`} > Last Name </label>
-          <input type="text" onChange={(e) => handleChange(e)} value={user?.lastName} name="lastName" placeholder="Enter your last name" className="h-10 px-4 text-sm border w-full border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent shadow-md transition duration-200 ease-in-out text-gray-800 mt-4" />
-        </div>
-        {/* Email */}
-        <div className="w-full lg:w-5/12 p-1 relative shadow-lg m-1 ">
-          <label className={`${!user?.email?.valid ? 'text-red-600' : ''} absolute text-sm bg-transparent px-1 text-gray-700 -top-3 left-2`} > Email </label>
-          <input type="email" onChange={(e) => handleChange(e)} value={user?.email?.value} name="email" placeholder="Enter your last name" className="h-10 px-4 text-sm border w-full border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent shadow-md transition duration-200 ease-in-out text-gray-800 mt-4" />
-        </div>
-        {/* Password */}
-        <div className="w-full lg:w-5/12 p-1 relative shadow-lg m-1 ">
-          <label className={`${!user?.password?.length ? 'text-red-600' : ''} absolute text-sm bg-transparent px-1 text-gray-700 -top-3 left-2`} > Password </label>
-          <input type="password" onChange={(e) => handleChange(e)} value={user?.password} name="password" placeholder="Enter your last name" className="h-10 px-4 text-sm border w-full border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent shadow-md transition duration-200 ease-in-out text-gray-800 mt-4" />
-        </div>
-        {/* Mobile Number */}
-        <div className="w-full lg:w-5/12 p-1 relative shadow-lg m-1 ">
+        <InputField 
+          label="Last Name" 
+          name="lastName" 
+          value={user.lastName} 
+          onChange={handleChange} 
+          placeholder="Enter your last name" 
+          required 
+        />
 
-          <label className={`${!user?.contact?.length ? 'text-red-600' : ''} absolute text-sm bg-transparent px-1 text-gray-700 -top-3 left-2`} > Mobile Number </label>
-          <input type="text" onChange={(e) => handleChange(e)} value={user?.contact} name="contact" placeholder="Enter your last name" className="h-10 px-4 text-sm border w-full border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent shadow-md transition duration-200 ease-in-out text-gray-800 mt-4" />
-        </div>
+        {/* Email */}
+        <InputField 
+          label="Email" 
+          name="email" 
+          value={user.email?.value} 
+          onChange={handleChange} 
+          placeholder="Enter your email" 
+          valid={user.email?.valid} 
+        />
+
+        {/* Password */}
+        <InputField 
+          label="Password" 
+          name="password" 
+          value={user.password?.value} 
+          onChange={handleChange} 
+          placeholder="Enter your password" 
+          type="password" 
+        />
+
+        {/* Mobile Number */}
+        <InputField 
+          label="Mobile Number" 
+          name="contact" 
+          value={user.contact} 
+          onChange={handleChange} 
+          placeholder="Enter your mobile number" 
+        />
+
         {/* Employee PAN Card */}
-        <div className="w-full lg:w-5/12 p-1 relative shadow-lg m-1  ">
-          <label className={`${!user?.panCard?.valid ? 'text-red-600' : ''} absolute text-sm bg-transparent px-1 text-gray-700 -top-3 left-2`} > Employee PAN Card </label>
-          <div className="flex justify-center items-center">
-            <input type="text" onChange={(e) => handleChange(e)} value={user?.panCard?.value} name="panCard" placeholder="Enter your PAN card number" className="h-10 px-4 text-sm border w-[90%] uppercase border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent shadow-md transition duration-200 ease-in-out text-gray-800 mt-4" />
-            <VerfiedIcon className={`${user?.panCard?.onlineVerified ? 'text-blue-400' : 'text-red-600'} h-10 w-5   mt-4`} />
+        <div className="w-full lg:w-5/12 p-1 relative shadow-md m-1">
+          <label className={`${!user.panCard?.valid ? 'text-red-600' : 'text-white-700'} text-sm   mb-1`}>
+            Employee PAN Card
+          </label>
+          <div className="flex items-center">
+            <input 
+              type="text" 
+              name="panCard" 
+              value={user.panCard?.value} 
+              onChange={handleChange} 
+              placeholder="Enter your PAN card number" 
+              className="h-10 w-10/12 px-4 text-sm focus:outline-none uppercase text-black focus:outline-blue-600  border border-gray-300 rounded-l-md focus:ring-2 focus:border-transparent transition duration-200"
+            />
+            <VerifiedIcon className={`${user.panCard?.onlineVerified ? 'text-blue-400' : 'text-red-600'} h-10 w-2/12 p-3 bg-gray-100 rounded-r-md`} />
           </div>
         </div>
       </div>
 
-      <div className="h-10 items-center w-full gap-4 flex justify-end">
-       {user?.panCard?.onlineVerified && user?.email?.valid ?
-        <button onClick={()=>handleSave()} type="button" className="rounded-sm bg-blue-500 text-white  h-10 w-20 m-1 hover:bg-blue-700 transition duration-200">
-          Save
-        </button>:
-        <small>some of the fields are not valid</small>  
-        }
-        <button onClick={()=>setUser(emptyuser)} type="button" className="rounded-sm bg-gray-500 text-white  h-10 w-20 m-1 hover:bg-gray-700 transition duration-200">
-          cancel
+      <div className="flex justify-end gap-4 bg-white bg-opacity-10  p-2 border-t">
+        {user.panCard?.onlineVerified && user.email?.valid ? (
+          <button onClick={handleSave} type="button" className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-700 transition duration-200">
+            Save
+          </button>
+        ) : (
+          <small className="text-red-500">Some fields are not valid</small>
+        )}
+        <button onClick={() => setUser(emptyuser)} type="button" className="px-4 py-2 rounded bg-gray-500 text-white hover:bg-gray-700 transition duration-200">
+          Cancel
         </button>
       </div>
     </div>
   );
 };
-
+ 
 export default NewClient;
+
+// Helper InputField Component
+const InputField = ({ label, name, value, onChange, placeholder, type = "text", valid = true, required = false }) => (
+  <div className="w-full lg:w-5/12 p-1 relative shadow-md">
+    <label className={`${!valid ? 'text-red-600' : 'text-white-700'} text-sm  mb-1`}>{label}</label>
+    <input 
+      type={type} 
+      name={name} 
+      value={value} 
+      onChange={onChange} 
+      placeholder={placeholder} 
+      required={required}
+      className="h-10 w-full px-4 text-sm border    text-black border-gray-300 rounded-md focus:ring-2 focus:outline-none focus:outline-sky-700 focus:border-transparent shadow-sm transition duration-200 ease-in-out" 
+    />
+  </div>
+);
