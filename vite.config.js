@@ -7,5 +7,5 @@ export default defineConfig({
     open: true,
     port: 3000,
   },
-  base: './', // Add this line
+  base: '/', // Add this line
 })
