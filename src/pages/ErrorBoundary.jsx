@@ -8,12 +8,12 @@ class ErrorBoundary extends React.Component {
     }
 
     static getDerivedStateFromError(error) {
-        // Update state so the next render will show the fallback UI
+
         return { hasError: true };
     }
 
     componentDidCatch(error, errorInfo) {
-        // Log the error to an error reporting service
+
         console.error("Error caught in ErrorBoundary:", error, errorInfo);
     }
 
@@ -22,9 +22,9 @@ class ErrorBoundary extends React.Component {
             return <Navigate to="/login" replace />;
         }
 
-        return this.props.children; 
+        return this.props.children;
     }
 }
- 
+
 
 export default ErrorBoundary

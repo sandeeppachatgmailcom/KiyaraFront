@@ -18,16 +18,14 @@ const useSocket = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Initialize socket connection
+     
     if (!socketRef.current) {
       // socketRef.current = io('ws://localhost:5000');
       socketRef.current = io('ws:://kiarabackend.onrender.com')
     }
 
     const socket = socketRef.current;
-
-    // Join or logout based on user state
-    if (user?.userId) {
+  if (user?.userId) {
       socket.emit('join', { userId: user.userId });
       socket.emit('addUser', { userId: user.userId });
     } else {
@@ -35,7 +33,7 @@ const useSocket = () => {
       handleLogout();
     }
 
-    // Emit notification if available
+     
     if (notification.length) {
       const currentNotification = JSON.parse(JSON.stringify(notification[0]));
       let x = socket.emit("sentNotification", currentNotification);
@@ -46,14 +44,14 @@ const useSocket = () => {
       },1000)
     }
 
-    // Handle incoming notifications
+     
     socket.on('receiveNotification', (message) => {
       console.log('Received notification:', message);
       toast.info(message?.message);
       receiveMessage(message);
     });
 
-    // Cleanup on unmount
+     
     return () => {
       socket.off('receiveNotification');
       socket.disconnect();

@@ -1,7 +1,7 @@
 import {createBrowserRouter, Navigate} from "react-router-dom" 
 import App from "../App" 
 import Signup from "../pages/signup"
-import AdminPage from "../pages/Admin"
+import RootPage from "../pages/Admin"
 import DashBoard from "../components/admin/DashBoard"
 import ClientComponent from "../components/admin/ClientComponent"
 import UserComponent from "../components/admin/Users"
@@ -30,7 +30,7 @@ const appRouter = createBrowserRouter([
             },
             {
                 path: 'adminHome',
-                element: <AdminPage />,
+                element: <RootPage />,
                 children: [
                     {
                         path: 'dashBoard',
