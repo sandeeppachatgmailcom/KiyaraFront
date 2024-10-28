@@ -35,13 +35,13 @@ const SampleChart2 = () => {
     fetchData();
   }, []);
 
-  const COLORS = ['#4CAF50', '#FF5252']; // Green for Success, Red for Failure
+  const COLORS = ['#075985', '#06B6D4']; // Green for Success, Red for Failure
 
   return (
-    <div className="w-full max-w-md p-4 mx-auto bg-white rounded-lg shadow-md">
+    <div className="w-full max-w-md p-4 mx-auto bg-white bg-opacity-1 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold text-center mb-4">Log Stats Overview</h2>
 
-      {/* Display Total Calls, Success Rate, and Failure Rate */}
+     
       <div className="text-center mb-4">
         <p><strong>Total Calls:</strong> {totalCalls}</p>
         <p><strong>Success Rate:</strong> {successRate}%</p>
