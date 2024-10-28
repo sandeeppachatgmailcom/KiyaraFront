@@ -11,9 +11,9 @@
 
 <h3 align="center">How to Start the Application</h3>
 <pre>
-git clone "your-repo-link"
-cd backend
-npm kiara
+git clone https://github.com/sandeeppachatgmailcom/kiyaraFront.git
+cd kiyara
+npm install
 npm run dev
 </pre>
 <h3 align="left">Folder Structure</h3>

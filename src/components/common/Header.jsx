@@ -19,7 +19,8 @@ const Header = () => {
         <div className="w-full h-[100%] flex gap-4 font-bold justify-end items-center p-5">
             {/* <MemoizedToastContainer/> */}
             <h1 className="text-sm uppercase">
-                {user?.firstname || 'Guest'}
+                {user?.firstname || 'Guest'} 
+                [{user?.role || ''}]
             </h1>
             <div onClick={handleLogout} className="w-10 h-10 cursor-pointer flex justify-center items-center text-gray-800 rounded-full">
                 <LogoutIcon className='w-[80%] h-[80%]' />

@@ -7,5 +7,7 @@ export const userApi = {
     turnUserOnOff:'/user/turnUserOnOff',
     deleteUser:'/user/deleteUser', 
     postActiveUserByClient:'/user/postActiveUserByClient',
-    postActiveClientsByClient:'/user/postActiveClientsByClient'
+    postActiveClientsByClient:'/user/postActiveClientsByClient',
+    postPanApiresult:'user/postPanApiresult',
+    logstats:'user/log-stats',
 }
