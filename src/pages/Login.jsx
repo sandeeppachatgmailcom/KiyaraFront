@@ -9,7 +9,7 @@ const Login = () => {
                     <div className="mb-4">
                         <h1 className="text-lg font-semibold border-b pb-2 mb-2">Admin</h1>
                         <p className="text-sm">
-                            <span className="font-medium">Username:</span> sandeeppachat@gmail.com
+                            <span className="font-medium">Username:</span> admin@gmail.com@gmail.com
                         </p>
                         <p className="text-sm">
                             <span className="font-medium">Password:</span> Asd@123.com
@@ -18,7 +18,7 @@ const Login = () => {
                     <div className="mb-4">
                         <h1 className="text-lg font-semibold border-b pb-2 mb-2">Client</h1>
                         <p className="text-sm">
-                            <span className="font-medium">Username:</span> sanooppachat@gmail.com
+                            <span className="font-medium">Username:</span> testclient@gmail.com
                         </p>
                         <p className="text-sm">
                             <span className="font-medium">Password:</span> Asd@123.com
