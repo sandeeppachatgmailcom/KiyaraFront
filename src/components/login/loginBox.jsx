@@ -50,7 +50,7 @@ const LoginBox = () => {
 
     return (
         <div className="w-[90%] border border-gray-400 border-opacity-30 bg-violet-900 bg-opacity-5 rounded-xl flex flex-col justify-start p-3 items-center h-[90%] gap-4">
-                
+            
             <HiMiniUserCircle className="w-32 h-[30%] text-violet-800 " />
             {/* <MemoizedToastContainer/> */}
 
