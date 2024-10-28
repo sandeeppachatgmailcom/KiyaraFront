@@ -8,6 +8,7 @@ import { userApi } from "../../api/api";
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { sendNotification } from "../../store/notificationSlice";
+import useGetActiveClients from "../../hooks/useGetActiveClients";
 
 const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
   const emptyuser = {
@@ -19,21 +20,26 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
     contact: '',
     panCard: { value: '', valid: false, isLegal: false, onlineVerified: false },
   };
-  const activeUSer = useSelector((state)=>state.user.user)
-
+  const activeUSer = useSelector((state) => state.user.user)
+  const ClientList = useGetActiveClients() || []
   const getMyIcon = useDynamicIcons();
   const CloseIcon = getMyIcon('close');
   const VerifiedIcon = getMyIcon('verified');
   const dispatch = useDispatch()
-  
+
   const [user, setUser] = useState(emptyuser);
   const [panValid, setPanValid] = useState(false);
   const checkValidPanOnline = useCheckPanValid();
 
   useEffect(() => {
-    const temp = { ...user, userType: userType, designation: userType == 'Client'?'DN10000008':'DN10000009' };
+    const temp = { ...user, userType: userType, designation: userType == 'Client' ? 'DN10000008' : 'DN10000009' };
     setUser(temp);
   }, [userType]);
+
+  useEffect(()=>{
+    console.log(ClientList,ClientList.length,'ClientList')
+  },[ClientList])
+
 
   useEffect(() => {
     const temp = {
@@ -48,7 +54,7 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
   const handleChange = async (e) => {
     const temp = { ...user };
     let { name, value } = e.target;
-
+     console.log(name,value,'888888888888888888888888888888888')
     if (name === 'panCard') {
       value = await value.slice(0, 10);
       const valid = validatePan(value.toUpperCase());
@@ -59,6 +65,8 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
     } else {
       temp[name] = value;
     }
+
+    console.log(temp,'temptemp')
     setUser(temp);
   };
 
@@ -67,32 +75,34 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
       const userData = {
         ...user,
         email: user.email.value,
-        panCard:  user.panCard?.value?.toUpperCase(), 
+        panCard: user.panCard?.value?.toUpperCase(),
         userType: userType,
-        designation: userType == 'Client'?'DN10000008':'DN10000009'
-                 
+        designation: userType == 'Client' ? 'DN10000008' : 'DN10000009',
+        reportingHead:!user.reportingHead?ClientList[0]?.userId :user.reportingHead,
+       // reportingHead:userType == 'Client' ?'HU100027':userData.reportingHead
       };
-      Object.keys(userData).map((key)=>{
-        if(!userData[key]) delete userData[key]
+      console.log(userData,'userDatauserDatauserData')
+      Object.keys(userData).map((key) => {
+        if (!userData[key]) delete userData[key]
         //if(!userData.password) toast.error('password not given')
 
-      }) 
+      })
 
 
 
-      console.log(userData,'hello my data')
+
       const result = await nodeServer.post(userApi.create, { ...userData });
-      console.log(result.data,'hello my result')
+
       if (result.data.status) {
         toast.success(result.data.message || 'Operation successful');
-        dispatch( sendNotification({
+        dispatch(sendNotification({
           receiverId: result?.data?.userId,
           message: "my dear user your data hasbeen modified ",
           senderId: activeUSer?.userId
-      })) 
-        setUser(emptyuser);
+        }))
+       // setUser(emptyuser);
         updateParent();
-       // closeWindow();
+        // closeWindow();
       } else {
         toast.error(result.data.message);
       }
@@ -103,61 +113,83 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
 
   return (
     <div className="w-full flex flex-col h-full  rounded-lg shadow-md    ">
-       
-      
+
+
       <div className="flex items-center bg-white bg-opacity-10 justify-between mb-4 border-b p-2">
         <h1 className="text-xl font-semibold text-white-700"> {userType} Registration</h1>
         <CloseIcon onClick={closeWindow} className="cursor-pointer text-white hover:text-red-500 transition duration-200" />
       </div>
 
       <div className="flex flex-col lg:flex-row lg:flex-wrap justify-center gap-4 p-4">
+        <div className="w-full    relative shadow-md">
+          {!(userType == 'Client')?<select onChange={(e)=>handleChange(e)} name="reportingHead" value={user?.reportingHead} required={true} className="focus:outline-none focus:outline-gray w-full h-10 text-gray-800">
+          <option value="" disabled hidden>Select Reporting Head</option>
+            {  ClientList?.length > 0 && ClientList.map((client) =>{
+                 console.log(ClientList,user,'ClientList--------------------')
+              return (
+                <option
+                  className="text-gray-900 w-full bg-transparent"
+                  key={client.userId}   
+                  value={client.userId} 
+                  selected={ClientList.length>1? user?.reportingHead == client?.userId:true} 
+                  defaultValue={ClientList.length == 1}
+                >
+                  {client.firstname}
+                </option>
+              )
+            } ) } 
+          </select>:''}
+
+        </div>
+
+
         {/* First Name */}
-        <InputField 
-          label="First Name" 
-          name="firstname" 
-          value={user.firstname} 
-          onChange={handleChange} 
-          placeholder="Enter your first name" 
-          required 
+        <InputField
+          label="First Name"
+          name="firstname"
+          value={user.firstname}
+          onChange={handleChange}
+          placeholder="Enter your first name"
+          required
         />
 
         {/* Last Name */}
-        <InputField 
-          label="Last Name" 
-          name="lastName" 
-          value={user.lastName} 
-          onChange={handleChange} 
-          placeholder="Enter your last name" 
-          required 
+        <InputField
+          label="Last Name"
+          name="lastName"
+          value={user.lastName}
+          onChange={handleChange}
+          placeholder="Enter your last name"
+          required
         />
 
         {/* Email */}
-        <InputField 
-          label="Email" 
-          name="email" 
-          value={user.email?.value} 
-          onChange={handleChange} 
-          placeholder="Enter your email" 
-          valid={user.email?.valid} 
+        <InputField
+          label="Email"
+          name="email"
+          value={user.email?.value}
+          onChange={handleChange}
+          placeholder="Enter your email"
+          valid={user.email?.valid}
         />
 
         {/* Password */}
-        <InputField 
-          label="Password" 
-          name="password" 
-          value={user.password?.value} 
-          onChange={handleChange} 
-          placeholder="Enter your password" 
-          type="password" 
+        <InputField
+          label="Password"
+          name="password"
+          value={user.password?.value}
+          onChange={handleChange}
+          placeholder="Enter your password"
+          type="password"
         />
 
         {/* Mobile Number */}
-        <InputField 
-          label="Mobile Number" 
-          name="contact" 
-          value={user.contact} 
-          onChange={handleChange} 
-          placeholder="Enter your mobile number" 
+        <InputField
+          label="Mobile Number"
+          name="contact"
+          value={user.contact}
+          onChange={handleChange}
+          placeholder="Enter your mobile number"
         />
 
         {/* Employee PAN Card */}
@@ -166,12 +198,12 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
             Employee PAN Card
           </label>
           <div className="flex items-center">
-            <input 
-              type="text" 
-              name="panCard" 
-              value={user.panCard?.value} 
-              onChange={handleChange} 
-              placeholder="Enter your PAN card number" 
+            <input
+              type="text"
+              name="panCard"
+              value={user.panCard?.value}
+              onChange={handleChange}
+              placeholder="Enter your PAN card number"
               className="h-10 w-10/12 px-4 text-sm focus:outline-none uppercase text-black focus:outline-blue-600  border border-gray-300 rounded-l-md focus:ring-2 focus:border-transparent transition duration-200"
             />
             <VerifiedIcon className={`${user.panCard?.onlineVerified ? 'text-blue-400' : 'text-red-600'} h-10 w-2/12 p-3 bg-gray-100 rounded-r-md`} />
@@ -194,21 +226,20 @@ const NewClient = ({ closeWindow, userType, inputUser, updateParent }) => {
     </div>
   );
 };
- 
+
 export default NewClient;
 
-// Helper InputField Component
 const InputField = ({ label, name, value, onChange, placeholder, type = "text", valid = true, required = false }) => (
   <div className="w-full lg:w-5/12 p-1 relative shadow-md">
     <label className={`${!valid ? 'text-red-600' : 'text-white-700'} text-sm  mb-1`}>{label}</label>
-    <input 
-      type={type} 
-      name={name} 
-      value={value} 
-      onChange={onChange} 
-      placeholder={placeholder} 
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
       required={required}
-      className="h-10 w-full px-4 text-sm border    text-black border-gray-300 rounded-md focus:ring-2 focus:outline-none focus:outline-sky-700 focus:border-transparent shadow-sm transition duration-200 ease-in-out" 
+      className="h-10 w-full px-4 text-sm border    text-black border-gray-300 rounded-md focus:ring-2 focus:outline-none focus:outline-sky-700 focus:border-transparent shadow-sm transition duration-200 ease-in-out"
     />
   </div>
 );

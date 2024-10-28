@@ -1,14 +1,15 @@
 import { memo, useEffect, useState } from "react"
 import useDynamicIcons from "../../hooks/useDynamicIcons"
-import NewClient from "../common/NewClient"
-import { ToastContainer } from "react-toastify"
-//import SingleUser from "../user/singleUser"
-import nodeServer from "../../api/axios"
-import { userApi } from "../../api/api"
+import NewClient from "../common/NewClient"  
 import SingleUser from "../user/SingleUser"
-const MemoizedToastContainer = memo(ToastContainer);
+import { useSelector } from "react-redux"
+import getMyActiveClients from "../../utils/getActiveClients"
+import getAllActiveClients from "../../utils/getAllActiveClients" 
+import getAllActiveUsers from "../../utils/getAllActiveUsers"
+import getMyActiveUsers from "../../utils/getMyActiveUsers"
 
 const UserComponent = () => {
+    const user = useSelector((state)=>state.user.user)
     const getMyIcon = useDynamicIcons()
     const [newClient, setNewClient] = useState(false)
     const IconComponent = getMyIcon('createNew')
@@ -23,13 +24,16 @@ const UserComponent = () => {
         panCard:'',};
     const fetchClients = async () => {
         try {
-            const result = await nodeServer.get(userApi.getActiveUsers)
-            console.log(result.data.data)
-            if (result.data) {
-                setClients(result.data.data)
+            console.log(user?.designation=='DN10000010','user?.designation==DN10000010')
+            if(user?.designation=='DN10000010'){
+                const result =await getAllActiveUsers()
+                console.log(result,'getAllActiveClientsDN10000010DN10000010')
+                setClients(result)
             }
             else {
-                setClients([])
+            const result =await getMyActiveUsers(user?.userId)
+            console.log(result,'getMyActiveUsers')
+            setClients(result)
             }
         } catch (error) {
 
@@ -38,6 +42,10 @@ const UserComponent = () => {
     const updateParentList = (userId) => {
         fetchClients()
     };
+
+    useEffect(()=>{
+        console.log(clients,'clientsclientsclientsclients')
+    },[clients])
 
     const updateParent = (tempUser) => {
         const temp = clients.map((user) => {
@@ -63,11 +71,11 @@ const UserComponent = () => {
 
                 </div>
                 <div className="w-full   h-[100%]  flex  ">
-                    <div className="w-full h-[100%]    overflow-scroll  flex flex-col  " >
+                    <div className="w-full h-[100%]      flex flex-col  " >
                          
-                        <div className="w-full flex flex-col gap-1 ">
+                        <div className="w-full flex flex-wrap overflow-scroll   gap-1 ">
                             {clients?.map((client) => {
-                                return <div key={client.userId} className="lg:h-12 bg-gradient-to-r border-gray-500 border-opacity-25   rounded-md  shadow-md    border w-full cursor-pointer hover:bg-cyan-200 hover:bg-opacity-40">
+                                return <div key={client.userId} className="lg:h-12 overflow-hidden w-full  bg-gradient-to-r border-gray-500 border-opacity-25   rounded-md  shadow-md    border   cursor-pointer hover:bg-cyan-200 hover:bg-opacity-40">
                                 <SingleUser 
                                     updateParentList={() => updateParentList()}  
                                     bgcolour={"bg-cyan-800 text-white"} 

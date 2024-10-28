@@ -6,4 +6,6 @@ export const userApi = {
     getActiveUsers:'/user/getActiveUsers',
     turnUserOnOff:'/user/turnUserOnOff',
     deleteUser:'/user/deleteUser', 
+    postActiveUserByClient:'/user/postActiveUserByClient',
+    postActiveClientsByClient:'/user/postActiveClientsByClient'
 }
