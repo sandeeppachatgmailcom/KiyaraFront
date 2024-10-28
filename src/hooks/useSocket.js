@@ -13,7 +13,7 @@ const useSocket = () => {
   const sendMessage = useSendNotification();
   const receiveMessage = useReceiveNotification();
   const handleLogout = useLogout();
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user.user); 
   const socketRef = useRef(null);
   const dispatch = useDispatch();
 
